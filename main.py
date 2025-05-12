@@ -49,7 +49,7 @@ SC3_PUSH_KEY = os.environ.get("SC3_PUSH_KEY")  # Server酱³ SendKey
 
 HOME_URL = "https://linux.do/"
 LOGIN_URL = "https://linux.do/login"
-
+value = 'Verify you are human'
 
 class LinuxDoBrowser:
     def __init__(self) -> None:
