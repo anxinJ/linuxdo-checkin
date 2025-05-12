@@ -64,6 +64,30 @@ class LinuxDoBrowser:
         # self.page.click(".login-button .d-button-label")
         self.page.goto(LOGIN_URL)
         time.sleep(2)
+        # 尝试过5s盾
+        for i in range(20):
+            try:
+                # 检查元素是否存在并点击
+                element = self.page.query_selector(f'xpath=//input[@value="{value}"]')
+                if element:
+                    logger.error(f"retry {i+1} times, Verify you are human click now")
+                    element.click()
+                    time.sleep(2)  # 等待2秒
+            except Exception as e:
+                logger.error(f"元素点击失败: {e}")
+            
+            # 检查cookie
+            cookies = self.page.context.cookies()
+            cf_clearance_cookie = next((cookie for cookie in cookies if cookie['name'] == 'cf_clearance'), None)
+            
+            if not cf_clearance_cookie:
+                logger.error(f"retry {i+1} times, browser_cookie is {cookies}")
+            else:
+                logger.info(f"retry {i+1} times, browser_cookie is {cookies}")
+                break  # 成功获取cookie，退出循环
+        
+        time.sleep(2)  # 额外等待
+        
         self.page.fill("#login-account-name", USERNAME)
         time.sleep(2)
         self.page.fill("#login-account-password", PASSWORD)
